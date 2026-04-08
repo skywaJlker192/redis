@@ -1,6 +1,5 @@
 """
 Роуты выдачи книг.
-БЕЗ кэша — каждый запрос идёт в PostgreSQL.
 """
 
 from __future__ import annotations
@@ -24,11 +23,7 @@ async def create_borrowing(
     data: BorrowingCreate,
     session: AsyncSession = Depends(get_session),
 ):
-    """
-    Выдать книгу читателю.
-
-    КАЖДАЯ выдача уникальна. Данные постоянно пишутся.
-    """
+    """Выдать книгу читателю."""
     # Проверяем что книга существует и доступна
     result = await session.execute(
         select(Book).where(Book.id == data.book_id)
@@ -64,11 +59,7 @@ async def return_book(
     borrowing_id: int,
     session: AsyncSession = Depends(get_session),
 ):
-    """
-    Вернуть книгу.
-
-    Операция записи — меняем borrowing и доступность книги.
-    """
+    """Вернуть книгу."""
     result = await session.execute(
         select(Borrowing)
         .options(joinedload(Borrowing.book))
@@ -100,11 +91,7 @@ async def list_borrowings(
     active_only: bool = Query(False),
     session: AsyncSession = Depends(get_session),
 ):
-    """
-    Список выдач (для библиотекаря).
-
-    Каждый запрос — актуальные данные.
-    """
+    """Список выдач."""
     stmt = (
         select(Borrowing)
         .options(joinedload(Borrowing.book))
@@ -124,11 +111,7 @@ async def get_borrowing(
     borrowing_id: int,
     session: AsyncSession = Depends(get_session),
 ):
-    """
-    Получить выдачу по ID.
-
-    Запрашивается конкретным читателем/библиотекарем.
-    """
+    """Получить выдачу по ID."""
     result = await session.execute(
         select(Borrowing)
         .options(joinedload(Borrowing.book))

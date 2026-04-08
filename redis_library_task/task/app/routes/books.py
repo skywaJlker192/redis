@@ -1,6 +1,5 @@
 """
 Роуты книг.
-БЕЗ кэша — каждый запрос идёт в PostgreSQL.
 """
 
 from __future__ import annotations
@@ -26,12 +25,7 @@ async def list_books(
     offset: int = Query(0, ge=0),
     session: AsyncSession = Depends(get_session),
 ):
-    """
-    Список книг с пагинацией и фильтром по автору.
-
-    Вызывается при просмотре каталога.
-    Частота: ВЫСОКАЯ (каждая страница каталога).
-    """
+    """Список книг с пагинацией и фильтром по автору."""
     stmt = (
         select(Book)
         .options(joinedload(Book.author))
@@ -53,13 +47,7 @@ async def top_rated_books(
     limit: int = Query(10, ge=1, le=50),
     session: AsyncSession = Depends(get_session),
 ):
-    """
-    Топ книг по рейтингу.
-
-    Показывается на ГЛАВНОЙ СТРАНИЦЕ каждому посетителю.
-    Данные одинаковые для всех.
-    Частота: ОЧЕНЬ ВЫСОКАЯ.
-    """
+    """Топ книг по рейтингу."""
     result = await session.execute(
         select(Book)
         .options(joinedload(Book.author))
@@ -76,13 +64,7 @@ async def popular_books(
     limit: int = Query(10, ge=1, le=50),
     session: AsyncSession = Depends(get_session),
 ):
-    """
-    Самые просматриваемые книги.
-
-    Показывается в блоке «Популярное» на главной.
-    Данные одинаковые для всех.
-    Частота: ОЧЕНЬ ВЫСОКАЯ.
-    """
+    """Самые просматриваемые книги (по views_count)."""
     result = await session.execute(
         select(Book)
         .options(joinedload(Book.author))
@@ -109,12 +91,7 @@ async def search_books(
     limit: int = Query(20, ge=1, le=100),
     session: AsyncSession = Depends(get_session),
 ):
-    """
-    Поиск книг по названию.
-
-    Вызывается при вводе в строку поиска.
-    Каждый запрос уникален (разные строки поиска).
-    """
+    """Поиск книг по названию."""
     result = await session.execute(
         select(Book)
         .options(joinedload(Book.author))
@@ -131,12 +108,7 @@ async def get_book(
     book_id: int,
     session: AsyncSession = Depends(get_session),
 ):
-    """
-    Карточка книги по ID.
-
-    Вызывается при открытии страницы книги.
-    Частота: ВЫСОКАЯ для популярных книг.
-    """
+    """Карточка книги по ID."""
     result = await session.execute(
         select(Book)
         .options(joinedload(Book.author))
@@ -160,11 +132,7 @@ async def create_book(
     data: BookCreate,
     session: AsyncSession = Depends(get_session),
 ):
-    """
-    Добавить книгу.
-
-    Частота: НИЗКАЯ (библиотекарь-админ).
-    """
+    """Добавить книгу."""
     book = Book(
         title=data.title,
         description=data.description,
@@ -185,11 +153,7 @@ async def update_book(
     data: BookUpdate,
     session: AsyncSession = Depends(get_session),
 ):
-    """
-    Обновить книгу.
-
-    Частота: НИЗКАЯ.
-    """
+    """Обновить книгу."""
     result = await session.execute(
         select(Book).where(Book.id == book_id)
     )

@@ -1,6 +1,5 @@
 """
-FastAPI приложение — онлайн-библиотека БЕЗ кэша.
-Все запросы идут напрямую в PostgreSQL.
+FastAPI приложение — онлайн-библиотека.
 """
 
 from __future__ import annotations
