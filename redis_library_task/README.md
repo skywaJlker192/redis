@@ -18,33 +18,6 @@
 
 ---
 
-## Структура проекта
-
-```
-redis_library_task/
-├── README.md               ← это задание
-├── benchmark.py            ← скрипт замера производительности
-├── task/                   ← проект, который вы дорабатываете
-│   ├── docker-compose.yml
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   ├── .env
-│   └── app/
-│       ├── config.py
-│       ├── db.py
-│       ├── main.py
-│       ├── models.py
-│       ├── schemas.py
-│       ├── seed.py
-│       └── routes/
-│           ├── authors.py
-│           ├── books.py
-│           └── borrowings.py
-└── solution/               ← эталонное решение (не открывать до сдачи!)
-```
-
----
-
 ## Запуск стартового проекта
 
 ```bash
